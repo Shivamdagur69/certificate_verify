@@ -14,10 +14,13 @@ body {
 }
 
 .container {
-<div style="text-align:center; margin-bottom:15px;">
-  <img src="college.png" style="height:60px; margin-right:15px;">
-  <img src="research.png" style="height:60px;">
-</div>
+  max-width: 600px;
+  margin: 60px auto;
+  background: #fff;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  text-align: center;
 }
 
 .title {
@@ -73,12 +76,29 @@ button {
   color: #c82333;
   border: 1px solid #dc3545;
 }
+
+.logo-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.logo-box img {
+  height: 60px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="container">
+
+<!-- 🔥 LOGOS -->
+<div class="logo-box">
+  <img src="college.png" alt="College Logo">
+  <img src="research.png" alt="Research Cell Logo">
+</div>
 
 <div class="title">🎓 STUDENT DEVELOPMENT PROGRAMME 2.0</div>
 <div class="subtitle">Building Research Competence</div>
@@ -139,7 +159,7 @@ function showResult(id) {
   }
 }
 
-// QR Auto verification
+// 🔥 QR Auto Verification
 let params = new URLSearchParams(window.location.search);
 let certID = params.get("cert");
 
