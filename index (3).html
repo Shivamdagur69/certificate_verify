@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDP 2.0 Certificate Verification</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: #333;
+}
+
+.container {
+  max-width: 600px;
+  margin: 60px auto;
+  background: #fff;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #1e3c72;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.org {
+  font-size: 13px;
+  margin-bottom: 20px;
+  color: #444;
+}
+
+input {
+  width: 85%;
+  padding: 12px;
+  margin: 15px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 12px 25px;
+  background: #1e3c72;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.result-box {
+  margin-top: 25px;
+  padding: 15px;
+  border-radius: 10px;
+  display: none;
+  text-align: left;
+}
+
+.valid {
+  background: #e6f9ec;
+  color: #1e7e34;
+  border: 1px solid #28a745;
+}
+
+.invalid {
+  background: #fdecea;
+  color: #c82333;
+  border: 1px solid #dc3545;
+}
+
+.logo-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.logo-box img {
+  height: 60px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- 🔥 LOGOS -->
+<div class="logo-box">
+  <img src="college.png" alt="College Logo">
+  <img src="research.png" alt="Research Cell Logo">
+</div>
+
+<div class="title">🎓 STUDENT DEVELOPMENT PROGRAMME 2.0</div>
+<div class="subtitle">Building Research Competence</div>
+
+<div class="org">
+Lloyd Group of Institutions<br>
+UG Management Department<br>
+ThinkLab - Research Cell
+</div>
+
+<hr>
+
+<h3>🔍 Certificate Verification</h3>
+
+<input type="text" id="certID" placeholder="Enter Certificate ID (e.g. SDP/CERT/001)">
+<br>
+<button onclick="verify()">Verify Certificate</button>
+
+<div id="resultBox" class="result-box"></div>
+
+</div>
+
+<script>
+
+const data = {
+  "SDP/CERT/001": {reg:"SDP/2026/001", name:"Aastha Raj", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/002": {reg:"SDP/2026/002", name:"Aditya Raj", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/003": {reg:"SDP/2026/003", name:"Anima Sinha", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/004": {reg:"SDP/2026/004", name:"Divya Kapoor", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/005": {reg:"SDP/2026/005", name:"Dhrati", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/006": {reg:"SDP/2026/006", name:"Kratika Jain", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/007": {reg:"SDP/2026/007", name:"Kunal Choudhary", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/008": {reg:"SDP/2026/008", name:"Riddhi Singh", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/009": {reg:"SDP/2026/009", name:"Preksha Shandilya", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/010": {reg:"SDP/2026/010", name:"Saloni Singh", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/011": {reg:"SDP/2026/011", name:"Sakshi Tiwari", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/012": {reg:"SDP/2026/012", name:"Vedant Srivastava", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/013": {reg:"SDP/2026/013", name:"Daksh Sharma", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/014": {reg:"SDP/2026/014", name:"Ritik Dwivedi", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/015": {reg:"SDP/2026/015", name:"Khushi Jana", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/016": {reg:"SDP/2026/016", name:"Harsh Baliyan", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/017": {reg:"SDP/2026/017", name:"Jahanvi Sharma", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/018": {reg:"SDP/2026/018", name:"Akshra Shrivastava", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/019": {reg:"SDP/2026/019", name:"Dhruv Chaudhary", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/020": {reg:"SDP/2026/020", name:"Nawratan Kumar", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/021": {reg:"SDP/2026/021", name:"Prakhar Gupta", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/022": {reg:"SDP/2026/022", name:"Simran", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/023": {reg:"SDP/2026/023", name:"Divya Rani", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/024": {reg:"SDP/2026/024", name:"Nitish Singh Bhandari", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/025": {reg:"SDP/2026/025", name:"Rohini Parihar", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/026": {reg:"SDP/2026/026", name:"Kirti Bhardwaj", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/027": {reg:"SDP/2026/027", name:"Arushi Chaurasia", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/028": {reg:"SDP/2026/028", name:"Shikhar Srivastava", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/029": {reg:"SDP/2026/029", name:"Krishika Singh", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/030": {reg:"SDP/2026/030", name:"Anuj Kacharla", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/031": {reg:"SDP/2026/031", name:"Vir Pratap Singh", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/032": {reg:"SDP/2026/032", name:"Ojas Ojha", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/033": {reg:"SDP/2026/033", name:"Kunik", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/034": {reg:"SDP/2026/034", name:"Sarika Kushwaha", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/035": {reg:"SDP/2026/035", name:"Hifza Firoz", course:"BBA", batch:"2023-26", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/036": {reg:"SDP/2026/036", name:"Dua Sarfaraz", course:"BBA", batch:"2023-26", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/037": {reg:"SDP/2026/037", name:"Mohit Byahut", course:"BBA", batch:"2023-26", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/038": {reg:"SDP/2026/038", name:"Supriya Srivastav", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/039": {reg:"SDP/2026/039", name:"Sneha Gupta", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/040": {reg:"SDP/2026/040", name:"Akshra Gupta", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/041": {reg:"SDP/2026/041", name:"Sneha Sharma", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/042": {reg:"SDP/2026/042", name:"Avika Singh", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/043": {reg:"SDP/2026/043", name:"Anamika Karn", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/044": {reg:"SDP/2026/044", name:"Himanshi Gupta", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/045": {reg:"SDP/2026/045", name:"Abhijeet Raj", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/046": {reg:"SDP/2026/046", name:"Om Tyagi", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/047": {reg:"SDP/2026/047", name:"Anchal Mishra", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/048": {reg:"SDP/2026/048", name:"Palak Nagar", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/049": {reg:"SDP/2026/049", name:"Manvi Sharma", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/050": {reg:"SDP/2026/050", name:"Ritika Kumari", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/051": {reg:"SDP/2026/051", name:"Muskan Kumari", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/052": {reg:"SDP/2026/052", name:"Anchita Dokania", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/053": {reg:"SDP/2026/053", name:"Ojasvi Sahu", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/054": {reg:"SDP/2026/054", name:"Sakshi Gupta", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/055": {reg:"SDP/2026/055", name:"Vinayak Rastogi", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/056": {reg:"SDP/2026/056", name:"Dhruv Kumar Sharma", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/057": {reg:"SDP/2026/057", name:"Ujjwal Jha", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/058": {reg:"SDP/2026/058", name:"Sudhanshu Shrivastav", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/059": {reg:"SDP/2026/059", name:"Ayush Tiwari", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/060": {reg:"SDP/2026/060", name:"Ayushi Jain", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/061": {reg:"SDP/2026/061", name:"Akshara Jain", course:"BBA", batch:"2023-26", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/062": {reg:"SDP/2026/062", name:"Priyanshu", course:"B.Com", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/063": {reg:"SDP/2026/063", name:"Yuvraj Singh", course:"B.Com", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/064": {reg:"SDP/2026/064", name:"Siddharth Mishra", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/065": {reg:"SDP/2026/065", name:"Nandani Singh", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/066": {reg:"SDP/2026/066", name:"Abhishek Mourya", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/067": {reg:"SDP/2026/067", name:"Lakshya Sharma", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/068": {reg:"SDP/2026/068", name:"Piyush Chandra", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/069": {reg:"SDP/2026/069", name:"Kanika Pal", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/070": {reg:"SDP/2026/070", name:"Bhoomi Singh", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/071": {reg:"SDP/2026/071", name:"Suhani Yadav", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/072": {reg:"SDP/2026/072", name:"Raghvendra Tripathi", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/073": {reg:"SDP/2026/073", name:"Vaishnavi Raj", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/074": {reg:"SDP/2026/074", name:"Aman Kumar", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/075": {reg:"SDP/2026/075", name:"Priyal Jain", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/076": {reg:"SDP/2026/076", name:"Anjali Singh", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/077": {reg:"SDP/2026/077", name:"Samrat Kumar", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/078": {reg:"SDP/2026/078", name:"Saurav Kumar", course:"B.Com", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/079": {reg:"SDP/2026/079", name:"Jiya Tiwari", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/080": {reg:"SDP/2026/080", name:"Sakshi Kumari", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/081": {reg:"SDP/2026/081", name:"Kajal Patel", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/082": {reg:"SDP/2026/082", name:"Shalini", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/083": {reg:"SDP/2026/083", name:"Palak Singh", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/084": {reg:"SDP/2026/084", name:"Disha Singh", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/085": {reg:"SDP/2026/085", name:"Aarna Misra", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/086": {reg:"SDP/2026/086", name:"Kashish", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/087": {reg:"SDP/2026/087", name:"Ananya Sharma", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/088": {reg:"SDP/2026/088", name:"Karan Pratap Singh", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/089": {reg:"SDP/2026/089", name:"Aayus Kumar Jha", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/090": {reg:"SDP/2026/090", name:"Shraddha Chaubey", course:"B.Com", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/091": {reg:"SDP/2026/091", name:"Rishika", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/092": {reg:"SDP/2026/092", name:"Shashwat Raj", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/093": {reg:"SDP/2026/093", name:"Navya", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/094": {reg:"SDP/2026/094", name:"Adarsh Kumar", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/095": {reg:"SDP/2026/095", name:"Navya Ojha", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/096": {reg:"SDP/2026/096", name:"Aman Kumar Mishra", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/097": {reg:"SDP/2026/097", name:"Bhupendra Singh", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/098": {reg:"SDP/2026/098", name:"Ananya Pandey", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/099": {reg:"SDP/2026/099", name:"Ayush Kishore", course:"BBA", batch:"2025-28", event:"SDP 2.0", date:"7-9 April 2026"},
+  "SDP/CERT/100": {reg:"SDP/2026/100", name:"Yuvraj Arora", course:"BBA", batch:"2024-27", event:"SDP 2.0", date:"7-9 April 2026"}
+};
+
+function verify() {
+  let id = document.getElementById("certID").value.trim();
+  showResult(id);
+}
+
+function showResult(id) {
+  let box = document.getElementById("resultBox");
+
+  if (data[id]) {
+    let s = data[id];
+    box.style.display = "block";
+    box.className = "result-box valid";
+    box.innerHTML =
+      "<b>✅ Valid Certificate</b><br><br>" +
+      "<b>Certificate ID:</b> " + id + "<br>" +
+      "<b>Registration No.:</b> " + s.reg + "<br>" +
+      "<b>Name:</b> " + s.name + "<br>" +
+      "<b>Course:</b> " + s.course + "<br>" +
+      "<b>Batch:</b> " + s.batch + "<br>" +
+      "<b>Event:</b> " + s.event + "<br>" +
+      "<b>Date:</b> " + s.date;
+  } else {
+    box.style.display = "block";
+    box.className = "result-box invalid";
+    box.innerHTML = "<b>❌ Invalid Certificate ID</b><br>Please check and try again.";
+  }
+}
+
+// 🔥 QR Auto Verification
+let params = new URLSearchParams(window.location.search);
+let certID = params.get("cert");
+if (certID) {
+  document.getElementById("certID").value = certID;
+  showResult(certID);
+}
+</script>
+
+</body>
+</html>
